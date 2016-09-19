@@ -10,10 +10,12 @@ var rowCount, columnCount;
 
 		initializeUI();
 		$('.learningJQ-cell').on('click', cellClick);
-		$('.learningJQ-cell').each(initAddresses);
+
 
 		rowCount = $("#grid").grid("option", "rowCount");
 		columnCount = $("#grid").grid("option", "columnCount");
+
+		//$('.learningJQ-cell').each(initAddresses);
 
 		spdArray = [1000, 500, 250, 100];
 
@@ -29,16 +31,37 @@ var rowCount, columnCount;
 
 	function cellClick() {
 		$(this).cell("toggleOn");
-		aliveCells = $("#grid").grid("cellsByCriterias", {on: true});
-		newGrid = aliveCells.clone();
-		newGrid.each(numberOfNeighbors);
 	}
 
 	function tick()
 	{
 		if(ticking)
 		{
+			aliveCells = $("#grid").grid("cellsByCriterias", {on: true});
+			newGrid = aliveCells.slice(0);
 
+			//for each alive cell
+			newGrid.each(function() {
+				var neighbor = 0;
+				var row = $(this).cell("option", "address").row;
+				var col = $(this).cell("option", "address").column;
+
+				//counting neighbors
+				newGrid.each(function() {
+					var nRow = $(this).cell("option", "address").row;
+					var nCol = $(this).cell("option", "address").column;
+
+					if(Math.abs(row - nRow) == 1 && Math.abs(col - nCol) == 1
+					|| Math.abs(row - nRow) == 0 && Math.abs(col - nCol) == 1
+					|| Math.abs(row - nRow) == 1 && Math.abs(col - nCol) == 0)
+					{
+						neighbor++;
+					}
+				});
+				console.log($(this).cell("option", "address"));
+				console.log(neighbor);
+				console.log(" ");
+			});
 		}	
 	}
 
@@ -109,13 +132,11 @@ var rowCount, columnCount;
 		
 	}
 
-	function numberOfNeighbors(index, element)
-	{
-		$(element).cell();
-
-		console.log($(element).cell("option", "address"));
-	}
-
+/**
+ * OBSOLETE
+ * @param i
+ * @param element
+ */
 	function initAddresses(i, element)
 	{
 		var rowIndex = Math.floor(i / 10);
@@ -123,6 +144,5 @@ var rowCount, columnCount;
 		$(element).cell("option", "address", {
 			index: i, row: rowIndex, column: columnIndex
 		});
-
 		console.log($(element).cell("option", "address"));
 	}
