@@ -1,0 +1,29 @@
+.learningJQ-grid {
+width: auto;
+}
+.learningJQ-cell
+{
+	background-color:#000000; 
+	color:#FFFFFF; 
+	border:solid 1px #6AEAE9;
+	font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size:16px;
+    font-weight:bold;
+}
+.learningJQ-grid > .learningJQ-cell
+{
+    width:50px;
+    height:50px;
+}
+
+.on
+{
+	background-color: #FFFFFF !important;
+}
+
+select
+{
+	width:150px;
+}
+
+

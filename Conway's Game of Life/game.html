@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>Conway's Game of Life</title>
+
+        <link rel="stylesheet" type="text/css" href="js/jquery/css/jquery-ui.min.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/learningJQ/css/jquery-learningJQ-grid-cell-displayAdapter.css" />
+        <link rel="stylesheet" type="text/css" href="css/cgl.css">
+
+        <script type="text/javascript" src="js/jquery/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jquery/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="js/jquery/learningJQ/jquery-learningJQ-grid-cell-displayAdapter.js"></script>
+        <script type="text/javascript" src="js/cgl.js"></script>
+     </head>
+     <body style="background-color:black;">
+		<input type="button" id="btnReset" value="Reset">
+        <label style="margin-left:10px; color:white;">Conway's Game of Life</label>
+		<br style="clear:both;" /><br />
+        <div id="grid" class="learningJQ-grid" data-row-count="10" data-column-count="10"
+             data-css-class="gridData" data-display-type="none"></div>
+        <br style="clear:both;" /><br />
+        <input type="button" id="btnTickToggle" value="Start">
+        <select id="sctSpeed">
+            <option value="min">Minimum</option>
+            <option value="slow">Slow</option>
+            <option value="medium">Medium</option>
+            <option value="fast">Fast</option>
+        </select>
+        <select id="sctSpawn">
+            <option value="glider">Glider</option>
+            <option value="star">Star</option>
+        </select>
+        <input type="button" id="btnSpawn" value="Spawn">
+		<h2 style="color:white">The four rules of Conway's Game of Life :</h2>
+		<p style="color:white">
+			Any live cell with fewer than two live neighbours dies, as if caused by under-population.<br><br />		
+			Any live cell with two or three live neighbours lives on to the next generation.<br><br />
+			Any live cell with more than three live neighbours dies, as if by over-population.<br><br />
+			Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+		</p>
+    </body>
+</html>
