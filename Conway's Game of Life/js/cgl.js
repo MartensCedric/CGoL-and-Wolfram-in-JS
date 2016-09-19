@@ -38,16 +38,19 @@ var rowCount, columnCount;
 		if(ticking)
 		{
 			aliveCells = $("#grid").grid("cellsByCriterias", {on: true});
-			newGrid = aliveCells.slice(0);
+			deadCells = $("#grid").grid("cellsByCriterias", {on: false});
+
+			console.log(aliveCells);
+			//newGrid = aliveCells.slice(0);
 
 			//for each alive cell
-			newGrid.each(function() {
+			aliveCells.each(function() {
 				var neighbor = 0;
 				var row = $(this).cell("option", "address").row;
 				var col = $(this).cell("option", "address").column;
 
 				//counting neighbors
-				newGrid.each(function() {
+				aliveCells.each(function() {
 					var nRow = $(this).cell("option", "address").row;
 					var nCol = $(this).cell("option", "address").column;
 
@@ -58,9 +61,39 @@ var rowCount, columnCount;
 						neighbor++;
 					}
 				});
-				console.log($(this).cell("option", "address"));
-				console.log(neighbor);
-				console.log(" ");
+				//Kill cell
+				if(neighbor < 2 || neighbor > 3)
+				{
+					console.log(neighbor);
+					$(this).cell("toggleOn");
+				}
+			});
+
+			//for each dead cells
+
+			deadCells.each(function() {
+				var neighbor = 0;
+				var row = $(this).cell("option", "address").row;
+				var col = $(this).cell("option", "address").column;
+
+				//counting neighbors
+				aliveCells.each(function() {
+					var nRow = $(this).cell("option", "address").row;
+					var nCol = $(this).cell("option", "address").column;
+
+					if(Math.abs(row - nRow) == 1 && Math.abs(col - nCol) == 1
+						|| Math.abs(row - nRow) == 0 && Math.abs(col - nCol) == 1
+						|| Math.abs(row - nRow) == 1 && Math.abs(col - nCol) == 0)
+					{
+						neighbor++;
+					}
+				});
+				
+				//Spawn cell
+				if(neighbor == 3)
+				{
+					$(this).cell("toggleOn");
+				}
 			});
 		}	
 	}
