@@ -1,23 +1,27 @@
 var tickSpeed, ticking;
-var aliveCells, newGrid;
+var aliveCells;
 var btnToggle, btnReset, btnSpawn;
 var sctSpeed, sctSpawn;
 var spdArray;
 var timer;
 var rowCount, columnCount;
+var creatures;
 
 	$(document).ready(function(){
 
 		initializeUI();
-		$('.learningJQ-cell').on('click', cellClick);
+		$('.ljq-grid').grid('option', 'click',  function( event, info) {
+			info.cellElement.cell("toggleOn");
+		});
 
 
 		rowCount = $("#grid").grid("option", "rowCount");
 		columnCount = $("#grid").grid("option", "columnCount");
 
-		//$('.learningJQ-cell').each(initAddresses);
 
-		spdArray = [1000, 500, 250, 100];
+		spdArray = [1000, 500, 250, 100, 25, 5];
+
+		initCreatureDictionary();
 
 		timer = setInterval(tick, spdArray[0]);
 		resetGame();
@@ -29,19 +33,12 @@ var rowCount, columnCount;
 		setTick(false);
 	}
 
-	function cellClick() {
-		$(this).cell("toggleOn");
-	}
-
 	function tick()
 	{
 		if(ticking)
 		{
-			aliveCells = $("#grid").grid("cellsByCriterias", {on: true});
-			deadCells = $("#grid").grid("cellsByCriterias", {on: false});
-
-			console.log(aliveCells);
-			//newGrid = aliveCells.slice(0);
+			aliveCells = $("#grid").grid("cellsByOn", true);
+			deadCells = $("#grid").grid("cellsByOn", false);
 
 			//for each alive cell
 			aliveCells.each(function() {
@@ -64,7 +61,6 @@ var rowCount, columnCount;
 				//Kill cell
 				if(neighbor < 2 || neighbor > 3)
 				{
-					console.log(neighbor);
 					$(this).cell("toggleOn");
 				}
 			});
@@ -126,7 +122,7 @@ var rowCount, columnCount;
 		btnReset.button();
 
 		btnSpawn = $("#btnSpawn");
-		//btnSpawn.on('click', spawnCells);
+		btnSpawn.on('click', spawnCells);
 		btnSpawn.button();
 
 		sctSpeed = $("#sctSpeed");
@@ -155,6 +151,12 @@ var rowCount, columnCount;
 			case "fast":
 				tickSpeed = spdArray[3];
 				break;
+			case "vfast":
+				tickSpeed = spdArray[4];
+				break;
+			case "max":
+				tickSpeed = spdArray[5];
+				break;
 			default:
 				console.error("Speed is incorrect");
 				break;
@@ -166,5 +168,18 @@ var rowCount, columnCount;
 	
 	function spawnCells(pattern)
 	{
-		
+		pattern = sctSpawn.val();
+		console.log(creatures[pattern]);
 	}
+	
+	function initCreatureDictionary()
+	{
+		//This is my custom Hashmap, I couldn't manage to read files with AJAX so I'm doing this
+		creatures = {};
+		creatures.glider = "0,1,0|0,0,1|1,1,1";
+		creatures.star = "0,1,0|1,1,1";
+		creatures.clown = "1,0,1|1,0,1|1,1,1";
+		creatures.circle = "0,0,1|1,1,0|0,1,0";
+	}
+		
+

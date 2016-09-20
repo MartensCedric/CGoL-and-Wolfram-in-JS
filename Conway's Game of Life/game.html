@@ -5,20 +5,25 @@
         <title>Conway's Game of Life</title>
 
         <link rel="stylesheet" type="text/css" href="js/jquery/css/jquery-ui.min.css" />
-        <link rel="stylesheet" type="text/css" href="js/jquery/learningJQ/css/jquery-learningJQ-grid-cell-displayAdapter.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/ljq/css/jquery-ljq-grid-all.css" />
+        <!--<link rel="stylesheet" type="text/css" href="js/jquery/learningJQ/css/jquery-learningJQ-grid-cell-displayAdapter.css" />-->
         <link rel="stylesheet" type="text/css" href="css/cgl.css">
 
         <script type="text/javascript" src="js/jquery/jquery.min.js"></script>
         <script type="text/javascript" src="js/jquery/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="js/jquery/learningJQ/jquery-learningJQ-grid-cell-displayAdapter.js"></script>
+        <script type="text/javascript" src="js/jquery/ljq/jquery-ljq-grid-all.js"></script>
+        <!--<script type="text/javascript" src="js/jquery/learningJQ/jquery-learningJQ-grid-cell-displayAdapter.js"></script>-->
         <script type="text/javascript" src="js/cgl.js"></script>
+
+
+
+
      </head>
      <body style="background-color:black;">
 		<input type="button" id="btnReset" value="Reset">
         <label style="margin-left:10px; color:white;">Conway's Game of Life</label>
 		<br style="clear:both;" /><br />
-        <div id="grid" class="learningJQ-grid" data-row-count="10" data-column-count="10"
-             data-css-class="gridData" data-display-type="none"></div>
+        <div id="grid" class="ljq-grid" data-row-count="10" data-column-count="10" data-css-class="gridData" data-display-type="none" data-cells-exist="false"></div> <!--data-cells-exist="false"-->
         <br style="clear:both;" /><br />
         <input type="button" id="btnTickToggle" value="Start">
         <select id="sctSpeed">
@@ -26,12 +31,18 @@
             <option value="slow">Slow</option>
             <option value="medium">Medium</option>
             <option value="fast">Fast</option>
+            <option value="vfast">Very fast</option>
+            <option value="max">Max speed</option>
         </select>
         <select id="sctSpawn">
             <option value="glider">Glider</option>
             <option value="star">Star</option>
+			<option value="clown">Clown</option>
+            <option value="circle">Circle</option>
         </select>
         <input type="button" id="btnSpawn" value="Spawn">
+        <span style="color:white">x : </span><input class="coords" type="text" id="textX">
+        <span style="color:white">y : </span><input class="coords" type="text" id="textY">
 		<h2 style="color:white">The four rules of Conway's Game of Life :</h2>
 		<p style="color:white">
 			Any live cell with fewer than two live neighbours dies, as if caused by under-population.<br><br />		

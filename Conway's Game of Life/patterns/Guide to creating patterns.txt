@@ -1,0 +1,3 @@
+0 = DEAD CELL
+1 = ALIVE CELL
+Separate each line with a | symbol
