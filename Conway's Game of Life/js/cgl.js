@@ -19,14 +19,14 @@ var rowCount, columnCount;
 
 		spdArray = [1000, 500, 250, 100];
 
+		timer = setInterval(tick, spdArray[0]);
 		resetGame();
 	});
 
 	function resetGame()
 	{
-		tickSpeed = spdArray[0];
-		ticking = false;
-		timer = setInterval(tick, tickSpeed);
+		$("#grid").grid("cells").cell("toggleOn", false);
+		setTick(false);
 	}
 
 	function cellClick() {
@@ -100,14 +100,18 @@ var rowCount, columnCount;
 
 	function tickToggle()
 	{
-		if(ticking)
+		setTick(!ticking);
+	}
+
+	function setTick(willTick)
+	{
+		if(willTick)
 		{
-			ticking = false;
-			btnToggle.button( "option", "label", "Start" );
-			
-		}else{
-			ticking = true;
 			btnToggle.button( "option", "label", "Stop" );
+			ticking = true;
+		}else{
+			btnToggle.button( "option", "label", "Start" );
+			ticking = false;
 		}
 	}
 
@@ -163,19 +167,4 @@ var rowCount, columnCount;
 	function spawnCells(pattern)
 	{
 		
-	}
-
-/**
- * OBSOLETE
- * @param i
- * @param element
- */
-	function initAddresses(i, element)
-	{
-		var rowIndex = Math.floor(i / 10);
-		var columnIndex = i % 10;
-		$(element).cell("option", "address", {
-			index: i, row: rowIndex, column: columnIndex
-		});
-		console.log($(element).cell("option", "address"));
 	}
