@@ -1,11 +1,13 @@
 var tickSpeed, ticking;
 var aliveCells;
 var btnToggle, btnReset, btnSpawn;
-var sctSpeed, sctSpawn;
+var sctSpeed, sctSpawn, sctGameType;
 var spdArray;
 var timer;
 var rowCount, columnCount;
 var creatures;
+var txtRule;
+var previousArray;
 
 	$(document).ready(function(){
 
@@ -21,7 +23,10 @@ var creatures;
 
 		spdArray = [1000, 500, 250, 100, 25, 5];
 
-		initCreatureDictionary();
+		//Abandoned feature
+		//initCreatureDictionary();
+
+		previousArray = [];
 
 		timer = setInterval(tick, spdArray[0]);
 		resetGame();
@@ -37,61 +42,76 @@ var creatures;
 	{
 		if(ticking)
 		{
-			aliveCells = $("#grid").grid("cellsByOn", true);
-			deadCells = $("#grid").grid("cellsByOn", false);
+			if(sctGameType.val() == "cgl")
+			{
+				tickCGoL();
+			}else if(sctGameType.val = "wolfram")
+			{
+				if(txtRuleToBinaryArray() !== undefined)
+				{
+					tickWolfram();
+				}
 
-			//for each alive cell
+			}
+		}	
+	}
+
+	function tickCGoL()
+	{
+		aliveCells = $("#grid").grid("cellsByOn", true);
+		deadCells = $("#grid").grid("cellsByOn", false);
+
+		//for each alive cell
+		aliveCells.each(function() {
+			var neighbor = 0;
+			var row = $(this).cell("option", "address").row;
+			var col = $(this).cell("option", "address").column;
+
+			//counting neighbors
 			aliveCells.each(function() {
-				var neighbor = 0;
-				var row = $(this).cell("option", "address").row;
-				var col = $(this).cell("option", "address").column;
+				var nRow = $(this).cell("option", "address").row;
+				var nCol = $(this).cell("option", "address").column;
 
-				//counting neighbors
-				aliveCells.each(function() {
-					var nRow = $(this).cell("option", "address").row;
-					var nCol = $(this).cell("option", "address").column;
-
-					if(Math.abs(row - nRow) == 1 && Math.abs(col - nCol) == 1
+				if(Math.abs(row - nRow) == 1 && Math.abs(col - nCol) == 1
 					|| Math.abs(row - nRow) == 0 && Math.abs(col - nCol) == 1
 					|| Math.abs(row - nRow) == 1 && Math.abs(col - nCol) == 0)
-					{
-						neighbor++;
-					}
-				});
-				//Kill cell
-				if(neighbor < 2 || neighbor > 3)
 				{
-					$(this).cell("toggleOn");
+					neighbor++;
+				}
+			});
+			//Kill cell
+			if(neighbor < 2 || neighbor > 3)
+			{
+				$(this).cell("toggleOn");
+			}
+		});
+
+		//for each dead cells
+
+		deadCells.each(function() {
+			var neighbor = 0;
+			var row = $(this).cell("option", "address").row;
+			var col = $(this).cell("option", "address").column;
+
+			//counting neighbors
+			aliveCells.each(function() {
+				var nRow = $(this).cell("option", "address").row;
+				var nCol = $(this).cell("option", "address").column;
+
+				if(Math.abs(row - nRow) == 1 && Math.abs(col - nCol) == 1
+					|| Math.abs(row - nRow) == 0 && Math.abs(col - nCol) == 1
+					|| Math.abs(row - nRow) == 1 && Math.abs(col - nCol) == 0)
+				{
+					neighbor++;
 				}
 			});
 
-			//for each dead cells
-
-			deadCells.each(function() {
-				var neighbor = 0;
-				var row = $(this).cell("option", "address").row;
-				var col = $(this).cell("option", "address").column;
-
-				//counting neighbors
-				aliveCells.each(function() {
-					var nRow = $(this).cell("option", "address").row;
-					var nCol = $(this).cell("option", "address").column;
-
-					if(Math.abs(row - nRow) == 1 && Math.abs(col - nCol) == 1
-						|| Math.abs(row - nRow) == 0 && Math.abs(col - nCol) == 1
-						|| Math.abs(row - nRow) == 1 && Math.abs(col - nCol) == 0)
-					{
-						neighbor++;
-					}
-				});
-				
-				//Spawn cell
-				if(neighbor == 3)
-				{
-					$(this).cell("toggleOn");
-				}
-			});
-		}	
+			//Spawn cell
+			if(neighbor == 3)
+			{
+				$(this).cell("toggleOn");
+			}
+		});
 	}
 
 	function tickToggle()
@@ -121,16 +141,25 @@ var creatures;
 		btnReset.on('click', resetGame);
 		btnReset.button();
 
-		btnSpawn = $("#btnSpawn");
+		/*btnSpawn = $("#btnSpawn");
 		btnSpawn.on('click', spawnCells);
-		btnSpawn.button();
+		btnSpawn.button();*/
 
 		sctSpeed = $("#sctSpeed");
 		sctSpeed.selectmenu({
 		change:changeTickSpeed});
 
-		sctSpawn = $("#sctSpawn");
-		sctSpawn.selectmenu();
+		/*sctSpawn = $("#sctSpawn");
+		sctSpawn.selectmenu();*/
+
+		sctGameType = $("#sctGameType");
+		sctGameType.selectmenu();
+
+		txtRule = $("#txtRule");
+		//txtRule.tooltip();
+		//txtRule.tooltip("option", "content", "Test!");
+		//txtRule.tooltip("open")
+
 	}
 
 	function changeTickSpeed()
@@ -166,10 +195,9 @@ var creatures;
 		timer = setInterval(tick, tickSpeed);
 	}
 	
-	function spawnCells(pattern)
+	function spawnCells()
 	{
-		pattern = sctSpawn.val();
-		console.log(creatures[pattern]);
+		console.log(creatures[sctSpawn.val()]);
 	}
 	
 	function initCreatureDictionary()
@@ -180,6 +208,48 @@ var creatures;
 		creatures.star = "0,1,0|1,1,1";
 		creatures.clown = "1,0,1|1,0,1|1,1,1";
 		creatures.circle = "0,0,1|1,1,0|0,1,0";
+	}
+
+	function intToBinary(number)
+	{
+		if(number <= 255 && number >= 0)
+		{
+			number = (number).toString(2);
+			while(number.length != 8)
+			{
+				number = "0" + number;
+			}
+		}
+		return number;
+	}
+
+	function binaryIntToArray(number)
+	{
+
+		//Only for ints below 256 and 0 or more
+		if(number.toString().length == 8)
+		{
+			var intArray = [];
+			for(i = 0; i < number.toString().length; i++)
+			{
+				intArray[i] = number.toString().charAt(i);
+			}
+			return intArray;
+		}
+	}
+
+	function txtRuleToBinaryArray()
+	{
+		return binaryIntToArray(intToBinary(parseInt(txtRule.val())));
+	}
+
+	function tickWolfram(patternArray)
+	{
+		if(previousArray.length != 0)
+		{
+			
+		}
+
 	}
 		
 
