@@ -7,7 +7,6 @@ var timer;
 var rowCount, columnCount;
 var creatures;
 var txtRule;
-var previousArray;
 
 	$(document).ready(function(){
 
@@ -26,8 +25,6 @@ var previousArray;
 		//Abandoned feature
 		//initCreatureDictionary();
 
-		previousArray = [];
-
 		timer = setInterval(tick, spdArray[0]);
 		resetGame();
 	});
@@ -45,7 +42,7 @@ var previousArray;
 			if(sctGameType.val() == "cgl")
 			{
 				tickCGoL();
-			}else if(sctGameType.val = "wolfram")
+			}else if(sctGameType.val() == "wolfram")
 			{
 				if(txtRuleToBinaryArray() !== undefined)
 				{
@@ -245,11 +242,49 @@ var previousArray;
 
 	function tickWolfram(patternArray)
 	{
-		if(previousArray.length != 0)
+		for(i = 1; i < rowCount; i++)
 		{
-			
+			var lastRowCells = $("#grid").grid("cellsByRow", rowCount - i);
+			lastRowCells.each(function(index, e)
+			{
+				var previousCell = $("#grid").grid("cellAt", {row:$(e).cell("option", "address").row - 1, column:$(e).cell("option", "address").column});
+				$(e).cell("option", "on", previousCell.cell("option", "on"));
+			});
 		}
 
+
+	}
+
+	function newState(left, center, right, wolfArray)
+	{
+		if(left == 1, center == 1, right == 1)
+		{
+			return wolfArray[0];
+		}else if(left == 1, center == 1, right == 0)
+		{
+			return wolfArray[1];
+		}else if(left == 1, center == 0, right == 1)
+		{
+			return wolfArray[2];
+		}else if(left == 1, center == 0, right == 0)
+		{
+			return wolfArray[3];
+		}else if(left == 0, center == 1, right == 1)
+		{
+			return wolfArray[4];
+		}else if(left == 0, center == 1, right == 0)
+		{
+			return wolfArray[5];
+		}else if(left == 0, center == 0, right == 1)
+		{
+			return wolfArray[6];
+		}else if(left == 0, center == 0, right == 0)
+		{
+			return wolfArray[7];
+		}
+		else{
+			console.err("Something went wrong!");
+		}
 	}
 		
 

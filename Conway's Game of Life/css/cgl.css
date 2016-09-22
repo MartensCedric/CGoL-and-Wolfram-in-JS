@@ -20,12 +20,15 @@ width: auto;
 
 select
 {
-	width:170px;
+	width:250px;
 }
 
 .coords
 {
 	width:25px;
+}
+body{
+	background: url('../images/background.png');
 }
 
 
